@@ -37,7 +37,3 @@ foreach ($phpScanner->getTranslations() as $translations) {
     $generator->generateFile($translations, "locales/{$domain}.po");
 }
 ```
-
-## Contributors
-
-Thanks to all [contributors](https://github.com/oscarotero/Gettext/graphs/contributors) specially to [@mlocati](https://github.com/mlocati).
