@@ -3,10 +3,9 @@ declare(strict_types = 1);
 
 namespace Gettext\Scanner;
 
+use PhpParser\NodeTraverser;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
-use PhpParser\NodeTraverser;
-use PhpParser\NodeDumper;
 
 class PhpFunctionsScanner implements FunctionsScannerInterface
 {
@@ -16,7 +15,7 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
     public function __construct(array $validFunctions = null, Parser $parser = null)
     {
         $this->validFunctions = $validFunctions;
-        $this->parser = $parser ?: (new ParserFactory)->create(ParserFactory::PREFER_PHP7);
+        $this->parser = $parser ?: (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
     }
 
     public function scan(string $code, string $filename = null): array

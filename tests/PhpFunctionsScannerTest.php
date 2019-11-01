@@ -102,7 +102,6 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertSame('fn_8();', array_shift($comments));
         $this->assertSame('ALLOW: This is a comment to fn9', array_shift($comments));
 
-
         //fn10
         $function = array_shift($functions);
         $this->assertSame('fn10', $function->getName());
@@ -179,35 +178,5 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertSame(23, $comment->getLine());
         $this->assertSame(23, $comment->getLastLine());
         $this->assertSame('ALLOW: Related comment 3', $comment->getComment());
-    }
-
-    public function stringDecodeProvider()
-    {
-        return [
-            ['"test"', 'test'],
-            ["'test'", 'test'],
-            ["'DATE \a\\t TIME'", 'DATE \a\t TIME'],
-            ["'DATE \a\\t TIME$'", 'DATE \a\t TIME$'],
-            ["'DATE \a\\t TIME\$'", 'DATE \a\t TIME$'],
-            ["'DATE \a\\t TIME\$a'", 'DATE \a\t TIME$a'],
-            ['"FIELD\\tFIELD"', "FIELD\tFIELD"],
-            ['"$"', '$'],
-            ['"Hi $"', 'Hi $'],
-            ['"$ hi"', '$ hi'],
-            ['"Hi\t$name"', "Hi\t\$name"],
-            ['"Hi\\\\"', 'Hi\\'],
-            ['"{$obj->name}"', '{$obj->name}'],
-            ['"a\x20b $c"', 'a b $c'],
-            ['"a\x01b\2 \1 \01 \001 \r \n \t \v \f"', "a\1b\2 \1 \1 \1 \r \n \t \v \f"],
-            ['"$ \$a \""', '$ $a "'],
-        ];
-    }
-
-    /**
-     * @dataProvider stringDecodeProvider
-     */
-    public function _testStringDecode($source, $decoded)
-    {
-        $this->assertSame($decoded, PhpFunctionsScanner::decode($source));
     }
 }

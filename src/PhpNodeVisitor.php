@@ -3,11 +3,10 @@ declare(strict_types = 1);
 
 namespace Gettext\Scanner;
 
-use PhpParser\NodeVisitor;
+use PhpParser\Comment;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
-use PhpParser\Node\Stmt\Nop;
-use PhpParser\Comment;
+use PhpParser\NodeVisitor;
 
 class PhpNodeVisitor implements NodeVisitor
 {
@@ -30,7 +29,7 @@ class PhpNodeVisitor implements NodeVisitor
     {
         if ($node instanceof FuncCall) {
             $name = $node->name->getLast();
-    
+
             if ($this->validFunctions === null || in_array($name, $this->validFunctions)) {
                 $this->functions[] = $this->createFunction($node);
             }
@@ -66,7 +65,7 @@ class PhpNodeVisitor implements NodeVisitor
             $node->getEndLine()
         );
 
-        foreach($node->getComments() as $comment) {
+        foreach ($node->getComments() as $comment) {
             $function->addComment(static::getComment($comment));
         }
 
@@ -83,7 +82,6 @@ class PhpNodeVisitor implements NodeVisitor
                 case 'Scalar_DNumber':
                     $function->addArgument($value->value);
                     break;
-                
                 default:
                     $function->addArgument();
             }
