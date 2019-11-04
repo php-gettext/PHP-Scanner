@@ -15,7 +15,7 @@ class PhpScannerTest extends TestCase
         $scanner = new PhpScanner(
             Translations::create('domain1'),
             Translations::create('domain2'),
-            Translations::create('domain3'),
+            Translations::create('domain3')
         );
 
         $this->assertCount(3, $scanner->getTranslations());
