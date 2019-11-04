@@ -7,6 +7,5 @@ and this project adheres to [Semantic Versioning](http://semver.org/).
 
 Previous releases are documented in [github releases](https://github.com/oscarotero/Gettext/releases)
 
-## [1.0.0] - Unreleased
-
+## 1.0.0 - 2019-11-05
 First version
