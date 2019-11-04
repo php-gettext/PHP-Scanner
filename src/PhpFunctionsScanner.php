@@ -18,7 +18,7 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
         $this->parser = $parser ?: (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
     }
 
-    public function scan(string $code, string $filename = null): array
+    public function scan(string $code, string $filename): array
     {
         $ast = $this->parser->parse($code);
 
