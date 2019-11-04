@@ -19,8 +19,8 @@
     },
     "require": {
         "php": "^7.2",
-        "gettext/gettext": "dev-v5-dev",
-        "nikic/php-parser": "^4.2"
+        "nikic/php-parser": "^4.2",
+        "gettext/gettext": "^5.0"
     },
     "require-dev": {
         "phpunit/phpunit": "^8.0",

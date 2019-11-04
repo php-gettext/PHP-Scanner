@@ -22,7 +22,7 @@ class PhpScannerTest extends TestCase
 
         $scanner->scanFile($file);
 
-        list($domain1, $domain2, $domain3) = $scanner->getTranslations();
+        list($domain1, $domain2, $domain3) = array_values($scanner->getTranslations());
 
         $this->assertCount(6, $domain1);
         $this->assertCount(4, $domain2);
