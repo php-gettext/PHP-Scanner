@@ -22,6 +22,10 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
     {
         $ast = $this->parser->parse($code);
 
+        if (empty($ast)) {
+            return [];
+        }
+
         $traverser = new NodeTraverser();
         $visitor = new PhpNodeVisitor($filename, $this->validFunctions);
         $traverser->addVisitor($visitor);

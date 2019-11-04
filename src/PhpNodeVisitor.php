@@ -57,7 +57,6 @@ class PhpNodeVisitor implements NodeVisitor
 
     protected function createFunction(FuncCall $node): ParsedFunction
     {
-        $arguments = [];
         $function = new ParsedFunction(
             $node->name->getLast(),
             $this->filename,
