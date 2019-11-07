@@ -31,7 +31,7 @@ class PhpScannerTest extends TestCase
         $scanner->setDefaultDomain('domain1');
         $scanner->scanFile($file);
 
-        $this->assertCount(38, $domain1);
+        $this->assertCount(39, $domain1);
         $this->assertCount(4, $domain2);
         $this->assertCount(1, $domain3);
     }

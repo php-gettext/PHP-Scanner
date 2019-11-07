@@ -115,3 +115,10 @@ d__('domain3', 'domain3 Text');
 d__('domain4', 'domain4 Text not scanned');
 gettext('no domain 2');
 
+class AuthMiddleware
+{
+    public function test()
+    {
+       return __('Accessing the Backoffice is not allowed at this time.');
+    }
+}
