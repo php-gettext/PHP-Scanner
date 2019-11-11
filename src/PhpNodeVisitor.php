@@ -6,6 +6,7 @@ namespace Gettext\Scanner;
 use PhpParser\Comment;
 use PhpParser\Node;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Name;
 use PhpParser\NodeVisitor;
 
 class PhpNodeVisitor implements NodeVisitor
@@ -28,9 +29,9 @@ class PhpNodeVisitor implements NodeVisitor
     public function enterNode(Node $node)
     {
         if ($node instanceof FuncCall) {
-            $name = $node->name->getLast();
+            $name = ($node->name instanceof Name) ? $node->name->getLast() : null;
 
-            if ($this->validFunctions === null || in_array($name, $this->validFunctions)) {
+            if ($name && ($this->validFunctions === null || in_array($name, $this->validFunctions))) {
                 $this->functions[] = $this->createFunction($node);
             }
 
