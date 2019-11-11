@@ -119,6 +119,9 @@ class AuthMiddleware
 {
     public function test()
     {
-       return __('Accessing the Backoffice is not allowed at this time.');
+        $test = function() {
+            return __('Accessing the Backoffice is not allowed at this time.');
+        };
+        $test();
     }
 }
