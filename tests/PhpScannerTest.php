@@ -2,6 +2,7 @@
 
 namespace Gettext\Tests;
 
+use Exception;
 use Gettext\Scanner\PhpScanner;
 use Gettext\Translations;
 use PHPUnit\Framework\TestCase;
@@ -34,5 +35,28 @@ class PhpScannerTest extends TestCase
         $this->assertCount(39, $domain1);
         $this->assertCount(4, $domain2);
         $this->assertCount(1, $domain3);
+    }
+
+    public function testInvalidFunction()
+    {
+        $this->expectException(Exception::class);
+
+        $scanner = new PhpScanner(Translations::create('messages'));
+        $scanner->scanString('<?php __(ucfirst("invalid function"));', 'file.php');
+
+        list($translations) = array_values($scanner->getTranslations());
+
+        $this->assertCount(0, $translations);
+    }
+
+    public function testIgnoredInvalidFunction()
+    {
+        $scanner = new PhpScanner(Translations::create('messages'));
+        $scanner->ignoreInvalidFunctions();
+        $scanner->scanString('<?php __(ucfirst("invalid function"));', 'file.php');
+
+        list($translations) = array_values($scanner->getTranslations());
+
+        $this->assertCount(0, $translations);
     }
 }
