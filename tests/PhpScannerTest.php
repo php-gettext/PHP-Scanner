@@ -23,7 +23,7 @@ class PhpScannerTest extends TestCase
 
         $scanner->scanFile($file);
 
-        list($domain1, $domain2, $domain3) = array_values($scanner->getTranslations());
+        list('domain1' => $domain1, 'domain2' => $domain2, 'domain3' => $domain3) = $scanner->getTranslations();
 
         $this->assertCount(6, $domain1);
         $this->assertCount(4, $domain2);
@@ -44,7 +44,7 @@ class PhpScannerTest extends TestCase
         $scanner = new PhpScanner(Translations::create('messages'));
         $scanner->scanString('<?php __(ucfirst("invalid function"));', 'file.php');
 
-        list($translations) = array_values($scanner->getTranslations());
+        list('messages' => $translations) = array_values($scanner->getTranslations());
 
         $this->assertCount(0, $translations);
     }
@@ -55,7 +55,7 @@ class PhpScannerTest extends TestCase
         $scanner->ignoreInvalidFunctions();
         $scanner->scanString('<?php __(ucfirst("invalid function"));', 'file.php');
 
-        list($translations) = array_values($scanner->getTranslations());
+        list('messages' => $translations) = $scanner->getTranslations();
 
         $this->assertCount(0, $translations);
     }
