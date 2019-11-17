@@ -7,6 +7,15 @@ use PHPUnit\Framework\TestCase;
 
 class PhpFunctionsScannerTest extends TestCase
 {
+    public function testScanOnEmptyCode()
+    {
+        $scanner = new PhpFunctionsScanner();
+        $file = __DIR__.'/assets/functions.php';
+        $functions = $scanner->scan('', $file);
+
+        $this->assertSame([], $functions);
+    }
+
     public function testPhpFunctionsExtractor()
     {
         $scanner = new PhpFunctionsScanner();
