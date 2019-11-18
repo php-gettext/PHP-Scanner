@@ -125,3 +125,5 @@ class AuthMiddleware
         $test();
     }
 }
+
+t("Translatable string","",["context"=>"Context string"]);

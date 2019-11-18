@@ -14,6 +14,7 @@ class PhpNodeVisitor implements NodeVisitor
     protected $validFunctions;
     protected $filename;
     protected $functions = [];
+    protected $argumentsHandlers = [];
 
     public function __construct(string $filename, array $validFunctions = null)
     {
@@ -76,7 +77,14 @@ class PhpNodeVisitor implements NodeVisitor
                 $function->addComment(static::getComment($comment));
             }
 
-            switch ($value->getType()) {
+            $type = $value->getType();
+
+            if (isset($this->argumentsHandlers[$type])) {
+                call_user_func($this->argumentsHandlers[$type], $function, $value);
+                continue;
+            }
+
+            switch ($type) {
                 case 'Scalar_String':
                 case 'Scalar_LNumber':
                 case 'Scalar_DNumber':
@@ -88,6 +96,11 @@ class PhpNodeVisitor implements NodeVisitor
         }
 
         return $function;
+    }
+
+    public function setArgumentsHandler(string $type, callable $handler)
+    {
+        $this->argumentsHandlers[$type] = $handler;
     }
 
     protected static function getComment(Comment $comment): string
