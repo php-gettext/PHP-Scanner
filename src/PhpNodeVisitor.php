@@ -5,6 +5,7 @@ namespace Gettext\Scanner;
 
 use PhpParser\Comment;
 use PhpParser\Node;
+use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\FuncCall;
 use PhpParser\Node\Name;
 use PhpParser\NodeVisitor;
@@ -14,7 +15,6 @@ class PhpNodeVisitor implements NodeVisitor
     protected $validFunctions;
     protected $filename;
     protected $functions = [];
-    protected $argumentsHandlers = [];
 
     public function __construct(string $filename, array $validFunctions = null)
     {
@@ -77,30 +77,10 @@ class PhpNodeVisitor implements NodeVisitor
                 $function->addComment(static::getComment($comment));
             }
 
-            $type = $value->getType();
-
-            if (isset($this->argumentsHandlers[$type])) {
-                call_user_func($this->argumentsHandlers[$type], $function, $value);
-                continue;
-            }
-
-            switch ($type) {
-                case 'Scalar_String':
-                case 'Scalar_LNumber':
-                case 'Scalar_DNumber':
-                    $function->addArgument($value->value);
-                    break;
-                default:
-                    $function->addArgument();
-            }
+            $function->addArgument(static::getValue($value));
         }
 
         return $function;
-    }
-
-    public function setArgumentsHandler(string $type, callable $handler)
-    {
-        $this->argumentsHandlers[$type] = $handler;
     }
 
     protected static function getComment(Comment $comment): string
@@ -114,5 +94,32 @@ class PhpNodeVisitor implements NodeVisitor
         }, explode("\n", $text));
 
         return trim(implode("\n", $lines));
+    }
+
+    protected static function getValue(Expr $value)
+    {
+        $type = $value->getType();
+
+        switch ($type) {
+            case 'Scalar_String':
+            case 'Scalar_LNumber':
+            case 'Scalar_DNumber':
+                return $value->value;
+            case 'Expr_Array':
+                $arr = [];
+
+                foreach ($value->items as $item) {
+                    $value = static::getValue($item->value);
+
+                    if ($item->key === null) {
+                        $arr[] = $value;
+                    } else {
+                        $key = static::getValue($item->key);
+                        $arr[$key] = $value;
+                    }
+                }
+
+                return $arr;
+        }
     }
 }

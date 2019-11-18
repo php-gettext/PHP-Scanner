@@ -26,3 +26,5 @@ fn12(
     'arg12'
     /* No Related comment 4 */
 );
+
+fn13("Translatable string","",["context"=>"Context string", 'foo']);
