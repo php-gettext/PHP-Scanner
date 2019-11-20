@@ -30,11 +30,18 @@ class PhpScannerTest extends TestCase
         $this->assertCount(1, $domain3);
 
         $scanner->setDefaultDomain('domain1');
+        $scanner->extractCommentsStartingWith('');
         $scanner->scanFile($file);
 
         $this->assertCount(39, $domain1);
         $this->assertCount(4, $domain2);
         $this->assertCount(1, $domain3);
+
+        //Extract comments
+        $translation = $domain1->find('CONTEXT', 'All comments');
+        $this->assertNotNull($translation);
+        $this->assertSame([$file => [66]], $translation->getReferences()->toArray());
+        $this->assertCount(1, $translation->getExtractedComments());
     }
 
     public function testInvalidFunction()
