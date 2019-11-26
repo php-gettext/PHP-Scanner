@@ -15,7 +15,7 @@ class PhpNodeVisitor implements NodeVisitor
     protected $validFunctions;
     protected $filename;
     protected $functions = [];
-    protected $bufferComments = [];
+    protected $bufferComments;
 
     public function __construct(string $filename, array $validFunctions = null)
     {
@@ -35,9 +35,9 @@ class PhpNodeVisitor implements NodeVisitor
 
             if ($name && ($this->validFunctions === null || in_array($name, $this->validFunctions))) {
                 $this->functions[] = $this->createFunction($node);
+            } elseif ($node->getComments()) {
+                $this->bufferComments = $node;
             }
-
-            $this->bufferComments = [];
             return null;
         }
 
@@ -45,11 +45,10 @@ class PhpNodeVisitor implements NodeVisitor
             case 'Stmt_Echo':
             case 'Stmt_Return':
             case 'Expr_Print':
-                $this->bufferComments = $node->getComments();
+                $this->bufferComments = $node;
                 return null;
         }
 
-        $this->bufferComments = [];
         return null;
     }
 
@@ -81,9 +80,13 @@ class PhpNodeVisitor implements NodeVisitor
             $function->addComment(static::getComment($comment));
         }
 
-        foreach ($this->bufferComments as $comment) {
-            $function->addComment(static::getComment($comment));
+        if ($this->bufferComments && $this->bufferComments->getStartLine() === $node->getStartLine()) {
+            foreach ($this->bufferComments->getComments() as $comment) {
+                $function->addComment(static::getComment($comment));
+            }
         }
+
+        $this->bufferComments = null;
 
         foreach ($node->args as $argument) {
             $value = $argument->value;

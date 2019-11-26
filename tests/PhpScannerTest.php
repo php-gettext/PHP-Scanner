@@ -42,6 +42,12 @@ class PhpScannerTest extends TestCase
         $this->assertNotNull($translation);
         $this->assertSame([$file => [66]], $translation->getReferences()->toArray());
         $this->assertCount(1, $translation->getExtractedComments());
+
+        $translation = $domain1->find(null, 'i18n tagged %s');
+        $this->assertNotNull($translation);
+        $this->assertSame([$file => [75]], $translation->getReferences()->toArray());
+        $this->assertCount(1, $translation->getExtractedComments());
+        $this->assertSame(['i18n Tagged comment on the line before'], $translation->getExtractedComments()->toArray());
     }
 
     public function testInvalidFunction()
