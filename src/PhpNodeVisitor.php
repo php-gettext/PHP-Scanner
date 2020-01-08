@@ -7,6 +7,7 @@ use PhpParser\Comment;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\NodeVisitor;
 
@@ -30,18 +31,17 @@ class PhpNodeVisitor implements NodeVisitor
 
     public function enterNode(Node $node)
     {
-        if ($node instanceof FuncCall) {
-            $name = ($node->name instanceof Name) ? $node->name->getLast() : null;
-
-            if ($name && ($this->validFunctions === null || in_array($name, $this->validFunctions))) {
-                $this->functions[] = $this->createFunction($node);
-            } elseif ($node->getComments()) {
-                $this->bufferComments = $node;
-            }
-            return null;
-        }
-
         switch ($node->getType()) {
+            case 'Expr_MethodCall':
+            case 'Expr_FuncCall':
+                $name = static::getName($node);
+
+                if ($name && ($this->validFunctions === null || in_array($name, $this->validFunctions))) {
+                    $this->functions[] = $this->createFunction($node);
+                } elseif ($node->getComments()) {
+                    $this->bufferComments = $node;
+                }
+                return null;
             case 'Stmt_Echo':
             case 'Stmt_Return':
             case 'Expr_Print':
@@ -67,10 +67,13 @@ class PhpNodeVisitor implements NodeVisitor
         return $this->functions;
     }
 
-    protected function createFunction(FuncCall $node): ParsedFunction
+    /**
+     * @param FuncCall|MethodCall $node
+     */
+    protected function createFunction(Expr $node): ParsedFunction
     {
         $function = new ParsedFunction(
-            $node->name->getLast(),
+            static::getName($node),
             $this->filename,
             $node->getStartLine(),
             $node->getEndLine()
@@ -112,6 +115,21 @@ class PhpNodeVisitor implements NodeVisitor
         }, explode("\n", $text));
 
         return trim(implode("\n", $lines));
+    }
+
+    protected static function getName(Node $node): ?string
+    {
+        $name = $node->name;
+
+        if ($name instanceof Name) {
+            return $name->getLast();
+        }
+
+        if ($name instanceof Identifier) {
+            return (string) $name;
+        }
+
+        return null;
     }
 
     protected static function getValue(Expr $value)

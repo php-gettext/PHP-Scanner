@@ -1,7 +1,7 @@
 <?php
 //This comment is related with the first function
 
-print(fn1('arg1', 'arg2', 3));
+print($fn->fn1('arg1', 'arg2', 3));
 fn2($var);
 fn3(fn4('arg4'), 'arg5', fn5(6, 7.5));
 fn6(['arr']);
@@ -13,7 +13,7 @@ return fn9(ARG_8);
 /* Comment to fn10 */ fn10();
 
 //Related comment 1
-fn11(/* ALLOW: Related comment 2 */ 'arg9', 'arg10' /* No related comment 3 */);
+$trans->fn11(/* ALLOW: Related comment 2 */ 'arg9', 'arg10' /* No related comment 3 */);
 
 /*
     Related comment 
