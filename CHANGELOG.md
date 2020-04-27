@@ -2,12 +2,15 @@
 
 All notable changes to this project will be documented in this file.
 
-The format is based on [Keep a Changelog](http://keepachangelog.com/) 
+The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
 ## [1.2.0] - Unreleased
 ### Added
 - Function scanner extracts not only functions calls but also class methods calls.
+
+### Fixed
+- Support for `gettext/gettext v5.5.0`
 
 ## [1.1.1] - 2019-11-25
 ### Fixed
