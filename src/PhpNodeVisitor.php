@@ -45,6 +45,7 @@ class PhpNodeVisitor implements NodeVisitor
             case 'Stmt_Echo':
             case 'Stmt_Return':
             case 'Expr_Print':
+            case 'Expr_Assign':
                 $this->bufferComments = $node;
                 return null;
         }

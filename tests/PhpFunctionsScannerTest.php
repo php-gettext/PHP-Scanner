@@ -164,7 +164,9 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertSame(30, $function->getLine());
         $this->assertSame(30, $function->getLastLine());
         $this->assertSame($file, $function->getFilename());
-        $this->assertCount(0, $function->getComments());
+        $this->assertCount(1, $function->getComments());
+        $comments = $function->getComments();
+        $this->assertSame('Related comment 5', array_shift($comments));
     }
 
     public function _testPhpFunctionsScannerWithDisabledComments()
