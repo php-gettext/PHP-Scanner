@@ -5,7 +5,7 @@ print($fn->fn1('arg1', 'arg2', 3));
 fn2($var);
 fn3(fn4('arg4'), 'arg5', fn5(6, 7.5));
 fn6(['arr']);
-fn7(CONSTANT_1);
+Translator::fn7(CONSTANT_1);
 // fn_8();
 /* ALLOW: This is a comment to fn9 */
 return fn9(ARG_8);

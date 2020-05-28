@@ -34,6 +34,7 @@ class PhpNodeVisitor implements NodeVisitor
         switch ($node->getType()) {
             case 'Expr_MethodCall':
             case 'Expr_FuncCall':
+            case 'Expr_StaticCall':
                 $name = static::getName($node);
 
                 if ($name && ($this->validFunctions === null || in_array($name, $this->validFunctions))) {
