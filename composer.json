@@ -18,7 +18,7 @@
         "issues": "https://github.com/php-gettext/PHP-Scanner/issues"
     },
     "require": {
-        "php": "^7.2",
+        "php": ">=7.2",
         "nikic/php-parser": "^4.2",
         "gettext/gettext": "^5.5.0"
     },
