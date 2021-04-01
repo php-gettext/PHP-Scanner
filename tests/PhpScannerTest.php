@@ -48,6 +48,7 @@ class PhpScannerTest extends TestCase
         $this->assertSame([$file => [75]], $translation->getReferences()->toArray());
         $this->assertCount(1, $translation->getExtractedComments());
         $this->assertSame(['i18n Tagged comment on the line before'], $translation->getExtractedComments()->toArray());
+        $this->assertSame(['php-format'], $translation->getFlags()->toArray());
     }
 
     public function testInvalidFunction()
