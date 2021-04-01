@@ -5,6 +5,10 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [1.3.0] - 2021-04-01
+### Added
+- The translations with sprintf expressions have the `php-format` flag [#12]
+
 ## [1.2.2] - 2021-01-12
 ### Fixed
 - Support for PHP 8 [#11]
@@ -43,7 +47,9 @@ First version
 [#8]: https://github.com/php-gettext/PHP-Scanner/issues/8
 [#9]: https://github.com/php-gettext/PHP-Scanner/issues/9
 [#11]: https://github.com/php-gettext/PHP-Scanner/issues/11
+[#12]: https://github.com/php-gettext/PHP-Scanner/issues/12
 
+[1.3.0]: https://github.com/php-gettext/PHP-Scanner/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/php-gettext/PHP-Scanner/compare/v1.2.1...v1.2.2
 [1.2.1]: https://github.com/php-gettext/PHP-Scanner/compare/v1.2.0...v1.2.1
 [1.2.0]: https://github.com/php-gettext/PHP-Scanner/compare/v1.1.1...v1.2.0
