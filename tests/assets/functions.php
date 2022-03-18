@@ -28,3 +28,7 @@ echo fn12(
 );
 //Related comment 5
 $bar = fn13("Translatable string","",["context"=>"Context string", 'foo']);
+
+fn14("Translatable " . "string");
+fn15("Translatable " . "long "
+. "string");

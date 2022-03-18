@@ -23,7 +23,7 @@ class PhpFunctionsScannerTest extends TestCase
         $code = file_get_contents($file);
         $functions = $scanner->scan($code, $file);
 
-        $this->assertCount(12, $functions);
+        $this->assertCount(14, $functions);
 
         //fn1
         $function = array_shift($functions);
@@ -167,6 +167,26 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertCount(1, $function->getComments());
         $comments = $function->getComments();
         $this->assertSame('Related comment 5', array_shift($comments));
+
+        //fn14
+        $function = array_shift($functions);
+        $this->assertSame('fn14', $function->getName());
+        $this->assertSame(1, $function->countArguments());
+        $this->assertSame(['Translatable string'], $function->getArguments());
+        $this->assertSame(32, $function->getLine());
+        $this->assertSame(32, $function->getLastLine());
+        $this->assertSame($file, $function->getFilename());
+        $this->assertCount(0, $function->getComments());
+
+        //fn15
+        $function = array_shift($functions);
+        $this->assertSame('fn15', $function->getName());
+        $this->assertSame(1, $function->countArguments());
+        $this->assertSame(['Translatable long string'], $function->getArguments());
+        $this->assertSame(33, $function->getLine());
+        $this->assertSame(34, $function->getLastLine());
+        $this->assertSame($file, $function->getFilename());
+        $this->assertCount(0, $function->getComments());
     }
 
     public function _testPhpFunctionsScannerWithDisabledComments()

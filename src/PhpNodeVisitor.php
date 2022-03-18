@@ -143,6 +143,12 @@ class PhpNodeVisitor implements NodeVisitor
             case 'Scalar_LNumber':
             case 'Scalar_DNumber':
                 return $value->value;
+            case 'Expr_BinaryOp_Concat':
+                $values = [];
+                foreach ($value->getSubNodeNames() as $name) {
+                    $values[] = static::getValue($value->$name);
+                }
+                return implode('', $values);
             case 'Expr_Array':
                 $arr = [];
 
