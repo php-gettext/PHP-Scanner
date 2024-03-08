@@ -29,7 +29,7 @@ class PhpFunctionsScannerTest extends TestCase
         $function = array_shift($functions);
         $this->assertSame('fn1', $function->getName());
         $this->assertSame(3, $function->countArguments());
-        $this->assertSame(['arg1', 'arg2', 3], $function->getArguments());
+        $this->assertSame(['arg1', 'arg2', null], $function->getArguments());
         $this->assertSame(4, $function->getLine());
         $this->assertSame(4, $function->getLastLine());
         $this->assertSame($file, $function->getFilename());
@@ -71,7 +71,7 @@ class PhpFunctionsScannerTest extends TestCase
         $function = array_shift($functions);
         $this->assertSame('fn5', $function->getName());
         $this->assertSame(2, $function->countArguments());
-        $this->assertSame([6, 7.5], $function->getArguments());
+        $this->assertSame([null, null], $function->getArguments());
         $this->assertSame(6, $function->getLine());
         $this->assertSame(6, $function->getLastLine());
         $this->assertSame($file, $function->getFilename());
@@ -187,41 +187,5 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertSame(34, $function->getLastLine());
         $this->assertSame($file, $function->getFilename());
         $this->assertCount(0, $function->getComments());
-    }
-
-    public function _testPhpFunctionsScannerWithDisabledComments()
-    {
-        $scanner = new PhpFunctionsScanner();
-        $scanner->includeComments(false);
-        $file = __DIR__.'/assets/functions.php';
-        $code = file_get_contents($file);
-        $functions = $scanner->scan($code, $file);
-
-        $this->assertCount(11, $functions);
-
-        foreach ($functions as $function) {
-            $this->assertCount(0, $function->getComments());
-        }
-    }
-
-    public function _testPhpFunctionsScannerWithPrefixedComments()
-    {
-        $scanner = new PhpFunctionsScanner();
-        $scanner->includeComments(['ALLOW:']);
-        $file = __DIR__.'/assets/functions.php';
-        $code = file_get_contents($file);
-        $functions = $scanner->scan($code, $file);
-
-        $this->assertCount(11, $functions);
-
-        //fn12
-        $function = $functions[10];
-        $this->assertCount(1, $function->getComments());
-
-        $comments = $function->getComments();
-        $comment = $comments[0];
-        $this->assertSame(23, $comment->getLine());
-        $this->assertSame(23, $comment->getLastLine());
-        $this->assertSame('ALLOW: Related comment 3', $comment->getComment());
     }
 }

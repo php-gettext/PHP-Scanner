@@ -10,13 +10,13 @@ use PhpParser\ParserFactory;
 
 class PhpFunctionsScanner implements FunctionsScannerInterface
 {
-    protected $parser;
-    protected $validFunctions;
+    protected Parser $parser;
+    protected ?array $validFunctions;
 
     public function __construct(array $validFunctions = null, Parser $parser = null)
     {
         $this->validFunctions = $validFunctions;
-        $this->parser = $parser ?: (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = $parser ?: (new ParserFactory())->createForNewestSupportedVersion();
     }
 
     public function scan(string $code, string $filename): array
@@ -35,7 +35,7 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
         return $visitor->getFunctions();
     }
 
-    protected function createNodeVisitor(string $filename): NodeVisitor
+    protected function createNodeVisitor(string $filename): PhpNodeVisitor
     {
         return new PhpNodeVisitor($filename, $this->validFunctions);
     }
