@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Gettext\Scanner;
 
 use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
@@ -27,9 +26,9 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
             return [];
         }
 
-        $traverser = new NodeTraverser();
         $visitor = $this->createNodeVisitor($filename);
-        $traverser->addVisitor($visitor);
+
+        $traverser = new NodeTraverser($visitor);
         $traverser->traverse($ast);
 
         return $visitor->getFunctions();
