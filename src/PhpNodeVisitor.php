@@ -149,8 +149,8 @@ class PhpNodeVisitor implements NodeVisitor
 
         switch ($type) {
             case 'Scalar_String':
-            case 'Scalar_LNumber':
-            case 'Scalar_DNumber':
+            case 'Scalar_Int':
+            case 'Scalar_Float':
                 return $value->value;
             case 'Expr_BinaryOp_Concat':
                 $values = [];

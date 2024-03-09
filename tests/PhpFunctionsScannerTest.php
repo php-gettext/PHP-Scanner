@@ -29,7 +29,7 @@ class PhpFunctionsScannerTest extends TestCase
         $function = array_shift($functions);
         $this->assertSame('fn1', $function->getName());
         $this->assertSame(3, $function->countArguments());
-        $this->assertSame(['arg1', 'arg2', null], $function->getArguments());
+        $this->assertSame(['arg1', 'arg2', 3], $function->getArguments());
         $this->assertSame(4, $function->getLine());
         $this->assertSame(4, $function->getLastLine());
         $this->assertSame($file, $function->getFilename());
@@ -71,7 +71,7 @@ class PhpFunctionsScannerTest extends TestCase
         $function = array_shift($functions);
         $this->assertSame('fn5', $function->getName());
         $this->assertSame(2, $function->countArguments());
-        $this->assertSame([null, null], $function->getArguments());
+        $this->assertSame([6, 7.5], $function->getArguments());
         $this->assertSame(6, $function->getLine());
         $this->assertSame(6, $function->getLastLine());
         $this->assertSame($file, $function->getFilename());
