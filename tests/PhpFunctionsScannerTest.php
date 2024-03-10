@@ -188,40 +188,4 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertSame($file, $function->getFilename());
         $this->assertCount(0, $function->getComments());
     }
-
-    public function _testPhpFunctionsScannerWithDisabledComments()
-    {
-        $scanner = new PhpFunctionsScanner();
-        $scanner->includeComments(false);
-        $file = __DIR__.'/assets/functions.php';
-        $code = file_get_contents($file);
-        $functions = $scanner->scan($code, $file);
-
-        $this->assertCount(11, $functions);
-
-        foreach ($functions as $function) {
-            $this->assertCount(0, $function->getComments());
-        }
-    }
-
-    public function _testPhpFunctionsScannerWithPrefixedComments()
-    {
-        $scanner = new PhpFunctionsScanner();
-        $scanner->includeComments(['ALLOW:']);
-        $file = __DIR__.'/assets/functions.php';
-        $code = file_get_contents($file);
-        $functions = $scanner->scan($code, $file);
-
-        $this->assertCount(11, $functions);
-
-        //fn12
-        $function = $functions[10];
-        $this->assertCount(1, $function->getComments());
-
-        $comments = $function->getComments();
-        $comment = $comments[0];
-        $this->assertSame(23, $comment->getLine());
-        $this->assertSame(23, $comment->getLastLine());
-        $this->assertSame('ALLOW: Related comment 3', $comment->getComment());
-    }
 }

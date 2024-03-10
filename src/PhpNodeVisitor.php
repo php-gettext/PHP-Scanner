@@ -7,16 +7,19 @@ use PhpParser\Comment;
 use PhpParser\Node;
 use PhpParser\Node\Expr;
 use PhpParser\Node\Expr\FuncCall;
+use PhpParser\Node\Expr\MethodCall;
 use PhpParser\Node\Identifier;
 use PhpParser\Node\Name;
 use PhpParser\NodeVisitor;
 
 class PhpNodeVisitor implements NodeVisitor
 {
-    protected $validFunctions;
-    protected $filename;
-    protected $functions = [];
-    protected $bufferComments;
+    protected ?array $validFunctions;
+    protected string $filename;
+    protected array $functions = [];
+
+    /** @var Comment[] */
+    protected array $bufferComments = [];
 
     public function __construct(string $filename, array $validFunctions = null)
     {
@@ -40,15 +43,17 @@ class PhpNodeVisitor implements NodeVisitor
                 if ($name && ($this->validFunctions === null || in_array($name, $this->validFunctions))) {
                     $this->functions[] = $this->createFunction($node);
                 } elseif ($node->getComments()) {
-                    $this->bufferComments = $node;
+                    $this->bufferComments[] = $node;
                 }
-                return null;
+                break;
+
+            case 'Stmt_Expression':
             case 'Stmt_Echo':
             case 'Stmt_Return':
             case 'Expr_Print':
             case 'Expr_Assign':
-                $this->bufferComments = $node;
-                return null;
+                $this->bufferComments[] = $node;
+                break;
         }
 
         return null;
@@ -85,13 +90,17 @@ class PhpNodeVisitor implements NodeVisitor
             $function->addComment(static::getComment($comment));
         }
 
-        if ($this->bufferComments && $this->bufferComments->getStartLine() === $node->getStartLine()) {
-            foreach ($this->bufferComments->getComments() as $comment) {
-                $function->addComment(static::getComment($comment));
+        if ($this->bufferComments) {
+            foreach ($this->bufferComments as $bufferComment) {
+                if ($bufferComment->getStartLine() === $node->getStartLine()) {
+                    foreach ($bufferComment->getComments() as $comment) {
+                        $function->addComment(static::getComment($comment));
+                    }
+                }
             }
         }
 
-        $this->bufferComments = null;
+        $this->bufferComments = [];
 
         foreach ($node->args as $argument) {
             $value = $argument->value;
@@ -140,8 +149,8 @@ class PhpNodeVisitor implements NodeVisitor
 
         switch ($type) {
             case 'Scalar_String':
-            case 'Scalar_LNumber':
-            case 'Scalar_DNumber':
+            case 'Scalar_Int':
+            case 'Scalar_Float':
                 return $value->value;
             case 'Expr_BinaryOp_Concat':
                 $values = [];

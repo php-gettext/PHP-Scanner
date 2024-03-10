@@ -4,7 +4,6 @@ declare(strict_types = 1);
 namespace Gettext\Scanner;
 
 use Gettext\Translation;
-use Gettext\Translations;
 
 /**
  * Class to scan PHP files and get gettext translations

@@ -4,19 +4,18 @@ declare(strict_types = 1);
 namespace Gettext\Scanner;
 
 use PhpParser\NodeTraverser;
-use PhpParser\NodeVisitor;
 use PhpParser\Parser;
 use PhpParser\ParserFactory;
 
 class PhpFunctionsScanner implements FunctionsScannerInterface
 {
-    protected $parser;
-    protected $validFunctions;
+    protected Parser $parser;
+    protected ?array $validFunctions;
 
     public function __construct(array $validFunctions = null, Parser $parser = null)
     {
         $this->validFunctions = $validFunctions;
-        $this->parser = $parser ?: (new ParserFactory())->create(ParserFactory::PREFER_PHP7);
+        $this->parser = $parser ?: (new ParserFactory())->createForNewestSupportedVersion();
     }
 
     public function scan(string $code, string $filename): array
@@ -27,15 +26,15 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
             return [];
         }
 
-        $traverser = new NodeTraverser();
         $visitor = $this->createNodeVisitor($filename);
-        $traverser->addVisitor($visitor);
+
+        $traverser = new NodeTraverser($visitor);
         $traverser->traverse($ast);
 
         return $visitor->getFunctions();
     }
 
-    protected function createNodeVisitor(string $filename): NodeVisitor
+    protected function createNodeVisitor(string $filename): PhpNodeVisitor
     {
         return new PhpNodeVisitor($filename, $this->validFunctions);
     }
