@@ -1,9 +1,13 @@
 # Change Log
-
 All notable changes to this project will be documented in this file.
 
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
+
+## [2.0.0] - 2024-03-10
+### Changed
+- Upgraded `nikic/php-parser` to 5.x [#16].
+- Bump the minimum PHP version from 7.2 to 7.4 [#16].
 
 ## [1.3.1] - 2022-03-18
 ### Fixed
@@ -53,7 +57,9 @@ First version
 [#11]: https://github.com/php-gettext/PHP-Scanner/issues/11
 [#12]: https://github.com/php-gettext/PHP-Scanner/issues/12
 [#14]: https://github.com/php-gettext/PHP-Scanner/issues/14
+[#16]: https://github.com/php-gettext/PHP-Scanner/issues/16
 
+[2.0.0]: https://github.com/php-gettext/PHP-Scanner/compare/v1.3.1...v2.0.0
 [1.3.1]: https://github.com/php-gettext/PHP-Scanner/compare/v1.3.0...v1.3.1
 [1.3.0]: https://github.com/php-gettext/PHP-Scanner/compare/v1.2.2...v1.3.0
 [1.2.2]: https://github.com/php-gettext/PHP-Scanner/compare/v1.2.1...v1.2.2
