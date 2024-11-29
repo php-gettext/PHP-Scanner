@@ -43,7 +43,7 @@ class PhpScanner extends CodeScanner
         ?string $domain,
         ?string $context,
         string $original,
-        string $plural = null
+        ?string $plural = null
     ): ?Translation {
         $translation = parent::saveTranslation($domain, $context, $original, $plural);
 

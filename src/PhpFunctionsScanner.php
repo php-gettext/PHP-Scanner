@@ -12,7 +12,7 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
     protected Parser $parser;
     protected ?array $validFunctions;
 
-    public function __construct(array $validFunctions = null, Parser $parser = null)
+    public function __construct(?array $validFunctions = null, ?Parser $parser = null)
     {
         $this->validFunctions = $validFunctions;
         $this->parser = $parser ?: (new ParserFactory())->createForNewestSupportedVersion();
