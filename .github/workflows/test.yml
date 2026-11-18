@@ -14,6 +14,8 @@ jobs:
     strategy:
       matrix:
         php:
+          - 7.2
+          - 7.3
           - 7.4
           - 8.0
           - 8.1
@@ -37,6 +39,10 @@ jobs:
           path: vendor
           key: ${{ runner.os }}-php-${{ matrix.php }}-composer-${{ hashFiles('**/composer.json') }}
           restore-keys: ${{ runner.os }}-php-${{ matrix.php }}-composer-
+
+      - name: Remove tools that need a newer PHP version
+        if: matrix.php == '7.2' || matrix.php == '7.3'
+        run: composer remove --dev --no-update friendsofphp/php-cs-fixer oscarotero/php-cs-fixer-config
 
       - name: Install dependencies
         run: composer install --prefer-dist --no-progress --no-suggest
