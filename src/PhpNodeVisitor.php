@@ -59,6 +59,13 @@ class PhpNodeVisitor implements NodeVisitor
             case 'Expr_Assign':
                 $this->bufferComments[] = $node;
                 break;
+            default:
+                // Comments in front of a function call belong to the outermost node starting there,
+                // e.g. the argument or array item the function call is the value of.
+                if ($node->getComments()) {
+                    $this->bufferComments[] = $node;
+                }
+                break;
         }
 
         return null;
@@ -93,8 +100,12 @@ class PhpNodeVisitor implements NodeVisitor
 
         // nikic/php-parser 4 assigns a comment to every node starting after it, not only to the outermost one.
         $seen = [];
-        $addComments = static function (Node $commentedNode) use ($function, &$seen): void {
+        $addComments = static function (Node $commentedNode, ?int $endLine = null) use ($function, &$seen): void {
             foreach ($commentedNode->getComments() as $comment) {
+                if ($endLine !== null && $comment->getEndLine() !== $endLine) {
+                    continue;
+                }
+
                 $position = $comment->getStartFilePos();
 
                 if (!isset($seen[$position])) {
@@ -109,6 +120,9 @@ class PhpNodeVisitor implements NodeVisitor
         foreach ($this->bufferComments as $bufferComment) {
             if ($bufferComment->getStartLine() === $node->getStartLine()) {
                 $addComments($bufferComment);
+            } else {
+                // Comments on the line before, e.g. in its own PHP block in a template.
+                $addComments($bufferComment, $node->getStartLine() - 1);
             }
         }
 
