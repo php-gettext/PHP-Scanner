@@ -9,13 +9,29 @@ use PhpParser\ParserFactory;
 
 class PhpFunctionsScanner implements FunctionsScannerInterface
 {
-    protected Parser $parser;
-    protected ?array $validFunctions;
+    /** @var Parser */
+    protected $parser;
+
+    /** @var array|null */
+    protected $validFunctions;
 
     public function __construct(?array $validFunctions = null, ?Parser $parser = null)
     {
         $this->validFunctions = $validFunctions;
-        $this->parser = $parser ?: (new ParserFactory())->createForNewestSupportedVersion();
+        $this->parser = $parser ?: static::createParser();
+    }
+
+    protected static function createParser(): Parser
+    {
+        $factory = new ParserFactory();
+
+        // nikic/php-parser 5
+        if (method_exists($factory, 'createForNewestSupportedVersion')) {
+            return $factory->createForNewestSupportedVersion();
+        }
+
+        // nikic/php-parser 4
+        return $factory->create(ParserFactory::PREFER_PHP7);
     }
 
     public function scan(string $code, string $filename): array
@@ -28,7 +44,8 @@ class PhpFunctionsScanner implements FunctionsScannerInterface
 
         $visitor = $this->createNodeVisitor($filename);
 
-        $traverser = new NodeTraverser($visitor);
+        $traverser = new NodeTraverser();
+        $traverser->addVisitor($visitor);
         $traverser->traverse($ast);
 
         return $visitor->getFunctions();

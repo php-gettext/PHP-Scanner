@@ -14,12 +14,17 @@ use PhpParser\NodeVisitor;
 
 class PhpNodeVisitor implements NodeVisitor
 {
-    protected ?array $validFunctions;
-    protected string $filename;
-    protected array $functions = [];
+    /** @var array|null */
+    protected $validFunctions;
 
-    /** @var Comment[] */
-    protected array $bufferComments = [];
+    /** @var string */
+    protected $filename;
+
+    /** @var ParsedFunction[] */
+    protected $functions = [];
+
+    /** @var Node[] */
+    protected $bufferComments = [];
 
     public function __construct(string $filename, ?array $validFunctions = null)
     {
@@ -86,17 +91,24 @@ class PhpNodeVisitor implements NodeVisitor
             $node->getEndLine()
         );
 
-        foreach ($node->getComments() as $comment) {
-            $function->addComment(static::getComment($comment));
-        }
+        // nikic/php-parser 4 assigns a comment to every node starting after it, not only to the outermost one.
+        $seen = [];
+        $addComments = static function (Node $commentedNode) use ($function, &$seen): void {
+            foreach ($commentedNode->getComments() as $comment) {
+                $position = $comment->getStartFilePos();
 
-        if ($this->bufferComments) {
-            foreach ($this->bufferComments as $bufferComment) {
-                if ($bufferComment->getStartLine() === $node->getStartLine()) {
-                    foreach ($bufferComment->getComments() as $comment) {
-                        $function->addComment(static::getComment($comment));
-                    }
+                if (!isset($seen[$position])) {
+                    $seen[$position] = true;
+                    $function->addComment(static::getComment($comment));
                 }
+            }
+        };
+
+        $addComments($node);
+
+        foreach ($this->bufferComments as $bufferComment) {
+            if ($bufferComment->getStartLine() === $node->getStartLine()) {
+                $addComments($bufferComment);
             }
         }
 
@@ -105,9 +117,7 @@ class PhpNodeVisitor implements NodeVisitor
         foreach ($node->args as $argument) {
             $value = $argument->value;
 
-            foreach ($argument->getComments() as $comment) {
-                $function->addComment(static::getComment($comment));
-            }
+            $addComments($argument);
 
             $function->addArgument(static::getValue($value));
         }
@@ -151,6 +161,9 @@ class PhpNodeVisitor implements NodeVisitor
             case 'Scalar_String':
             case 'Scalar_Int':
             case 'Scalar_Float':
+            // nikic/php-parser 4
+            case 'Scalar_LNumber':
+            case 'Scalar_DNumber':
                 return $value->value;
             case 'Expr_BinaryOp_Concat':
                 $values = [];
