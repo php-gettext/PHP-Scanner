@@ -188,4 +188,52 @@ class PhpFunctionsScannerTest extends TestCase
         $this->assertSame($file, $function->getFilename());
         $this->assertCount(0, $function->getComments());
     }
+
+    public function testCommentsOfWrappingNodes()
+    {
+        $code = <<<'PHP'
+<?php
+printf(
+    /* translators: %s: Name */
+    __('Hello %s'),
+    $name
+);
+
+$labels = [
+    // translators: Label
+    'label' => __('Label'),
+    'other' => __('Other'),
+];
+
+echo '<p>' .
+    /* translators: Concatenated */
+    __('Concatenated') . '</p>';
+?>
+<?php /* translators: Previous block */ ?>
+<p><?php _e('Template'); ?></p>
+
+<?php /* translators: Too far away */ ?>
+
+<p><?php _e('No comment'); ?></p>
+PHP;
+
+        $scanner = new PhpFunctionsScanner(['__', '_e']);
+        $comments = [];
+
+        foreach ($scanner->scan($code, 'file.php') as $function) {
+            $comments[$function->getArguments()[0]] = $function->getComments();
+        }
+
+        $this->assertSame(
+            [
+                'Hello %s' => ['translators: %s: Name'],
+                'Label' => ['translators: Label'],
+                'Other' => [],
+                'Concatenated' => ['translators: Concatenated'],
+                'Template' => ['translators: Previous block'],
+                'No comment' => [],
+            ],
+            $comments
+        );
+    }
 }
