@@ -2,7 +2,6 @@
 
 [![Latest Version on Packagist][ico-version]][link-packagist]
 [![Software License][ico-license]](LICENSE)
-[![Build Status][ico-travis]][link-travis]
 [![Total Downloads][ico-downloads]][link-downloads]
 
 Created by Oscar Otero <http://oscarotero.com> <oom@oscarotero.com> (MIT License)
@@ -56,9 +55,7 @@ The MIT License (MIT). Please see [LICENSE](LICENSE) for more information.
 
 [ico-version]: https://img.shields.io/packagist/v/gettext/php-scanner.svg?style=flat-square
 [ico-license]: https://img.shields.io/badge/license-MIT-brightgreen.svg?style=flat-square
-[ico-travis]: https://img.shields.io/travis/php-gettext/PHP-Scanner/master.svg?style=flat-square
 [ico-downloads]: https://img.shields.io/packagist/dt/gettext/php-scanner.svg?style=flat-square
 
 [link-packagist]: https://packagist.org/packages/gettext/php-scanner
-[link-travis]: https://travis-ci.org/php-gettext/PHP-Scanner
 [link-downloads]: https://packagist.org/packages/gettext/php-scanner
