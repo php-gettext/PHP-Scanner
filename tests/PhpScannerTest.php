@@ -56,6 +56,55 @@ class PhpScannerTest extends TestCase
         $this->assertSame(['php-format'], $translation->getFlags()->toArray());
     }
 
+    /**
+     * @see https://github.com/php-gettext/PHP-Scanner/issues/19
+     */
+    public function testCommentsInArrays()
+    {
+        $code = <<<'PHP'
+<?php
+/* PREV: Comment 1 */
+$arg = [__('String 1')];
+
+$args = array_merge($args, [
+    'title' => /* PREV: Comment 2 */ __('String 2'),
+    'noscript' => [
+        /* PREV: Comment 3 */
+        Flash::INFO => [__('String 3')]
+    ],
+    'breadcrumb' => [
+        ['text' => /* PREV: Comment 4 */ d__('admin', 'String 4'), 'link' => get_homepage_url()],
+    ],
+    'metatags' => new Meta([
+        /* PREV: Comment 5 */
+        'description' => __('String 5'),
+    ]),
+]);
+PHP;
+
+        $scanner = new PhpScanner(
+            Translations::create('default'),
+            Translations::create('admin')
+        );
+        $scanner->setFunctions(['__' => 'gettext', 'd__' => 'dgettext']);
+        $scanner->ignoreInvalidFunctions(true);
+        $scanner->setDefaultDomain('default');
+        $scanner->extractCommentsStartingWith('PREV:');
+        $scanner->scanString($code, 'file.php');
+
+        ['default' => $default, 'admin' => $admin] = $scanner->getTranslations();
+
+        foreach ([1, 2, 3, 5] as $number) {
+            $translation = $default->find(null, "String $number");
+            $this->assertNotNull($translation);
+            $this->assertSame(["PREV: Comment $number"], $translation->getExtractedComments()->toArray());
+        }
+
+        $translation = $admin->find(null, 'String 4');
+        $this->assertNotNull($translation);
+        $this->assertSame(['PREV: Comment 4'], $translation->getExtractedComments()->toArray());
+    }
+
     public function testInvalidFunction()
     {
         $this->expectException(Exception::class);
