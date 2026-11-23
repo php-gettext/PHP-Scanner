@@ -4,6 +4,14 @@ All notable changes to this project will be documented in this file.
 The format is based on [Keep a Changelog](http://keepachangelog.com/)
 and this project adheres to [Semantic Versioning](http://semver.org/).
 
+## [2.1.0] - Unreleased
+### Added
+- Support for PHP 7.2 [#21].
+- Support more cases of comments association [#20].
+
+### Fixed
+- Improved tests and test on PHP 8.5 and 8.6 [#22], [#23].
+
 ## [2.0.1] - 2024-11-29
 ### Fixed
 - Support for Php 8.4 [#18].
@@ -63,7 +71,12 @@ First version
 [#14]: https://github.com/php-gettext/PHP-Scanner/issues/14
 [#16]: https://github.com/php-gettext/PHP-Scanner/issues/16
 [#18]: https://github.com/php-gettext/PHP-Scanner/issues/18
+[#20]: https://github.com/php-gettext/PHP-Scanner/issues/20
+[#21]: https://github.com/php-gettext/PHP-Scanner/issues/21
+[#22]: https://github.com/php-gettext/PHP-Scanner/issues/22
+[#23]: https://github.com/php-gettext/PHP-Scanner/issues/23
 
+[2.1.0]: https://github.com/php-gettext/PHP-Scanner/compare/v2.0.1...HEAD
 [2.0.1]: https://github.com/php-gettext/PHP-Scanner/compare/v2.0.0...v2.0.1
 [2.0.0]: https://github.com/php-gettext/PHP-Scanner/compare/v1.3.1...v2.0.0
 [1.3.1]: https://github.com/php-gettext/PHP-Scanner/compare/v1.3.0...v1.3.1
